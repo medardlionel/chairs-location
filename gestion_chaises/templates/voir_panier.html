@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Panier</title>
+    <link rel="stylesheet" href="{% static 'css/panier.css' %}">
+</head>
+<body>
+    
+    <div class="container">
+        <h1>My Cart</h1>
+
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Chair</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in articles_avec_total %}
+                <tr>
+                    <td>{{ item.article.chaise.nom }}</td>
+                    <td>{{ item.article.chaise.prix_location_journalier }} $</td>
+                    <td>
+                        <form method="POST" action="{% url 'modifier_quantite' item.article.id %}">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ item.article.quantite }}" min="1">
+                            <button type="submit">Update</button>
+                        </form>
+                    </td>
+                    <td>{{ item.total_article }} $</td>
+                    <td>
+                        <form method="POST" action="{% url 'supprimer_article' item.article.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Affichage du total et validation -->
+        <div class="cart-summary">
+            <p class="total">Total to pay : <span>{{ total_panier }} $</span></p>
+            <form method="POST" action="{% url 'passer_commande' %}">
+                {% csrf_token %}
+                <button type="submit" class="checkout-btn">Place Order</button>
+            </form>
+
+            <div class="back-home">
+                <a href="{% url 'liste_chaises' %}" class="home-btn">Back to home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

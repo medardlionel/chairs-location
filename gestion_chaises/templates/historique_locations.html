@@ -1,0 +1,6 @@
+<h1>Historique des locations</h1>
+<ul>
+    {% for location in locations %}
+    <li>{{ location.chaise.nom }} du {{ location.date_debut }} au {{ location.date_fin }} - Prix total : {{ location.prix_total }}€</li>
+    {% endfor %}
+</ul>
